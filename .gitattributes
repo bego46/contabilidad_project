@@ -1,0 +1,26 @@
+# Asegura que todos los archivos de texto usen LF como salto de línea
+* text=auto eol=lf
+
+# Trata los archivos *.sh como texto y asegúrate que usen LF
+*.sh text eol=lf
+
+# Archivos Python
+*.py text eol=lf
+
+# Archivos Markdown y config
+*.md text eol=lf
+*.env text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+*.json text eol=lf
+
+# No normalizar binarios
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.pdf binary
+*.zip binary
+*.woff binary
+*.woff2 binary

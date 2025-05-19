@@ -1,0 +1,51 @@
+# Ignorar entorno virtual
+.venv/
+env/
+venv/
+
+# Archivos de Python compilados
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Archivos de base de datos SQLite
+*.sqlite3
+db.sqlite3
+contabilidad.db
+
+# Archivos de log
+*.log
+
+# Configuraciones de entorno / secret keys
+.env
+*.env
+
+# Archivos temporales del sistema operativo
+.DS_Store
+Thumbs.db
+
+# Archivos de migraciones innecesarios (si lo deseas)
+# Puedes ignorarlos o no, según el proyecto
+# */migrations/*.py
+# */migrations/*.pyc
+
+# Archivos de cache de Django
+*.pot
+*.mo
+
+# VSCode config (opcional)
+.vscode/
+
+# Archivos creados por pip
+pip-log.txt
+
+# Archivos generados por pruebas
+htmlcov/
+coverage.xml
+*.cover
+*.py,cover
+.cache
+
+# Archivos de despliegue o producción
+staticfiles/
+node_modules/
