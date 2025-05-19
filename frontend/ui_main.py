@@ -5,6 +5,7 @@ from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg as FigureCanvas
 from backend.db_manager import DBManager
 from frontend.ui_register import RegistroTransaccion
 from frontend.ui_history import HistorialTransacciones
+from frontend.ui_reports import Reportes
 from backend.calculations import calcular_balance
 
 
@@ -31,9 +32,13 @@ class MainWindow(QMainWindow):
 
         self.btn_historial = QPushButton("Ver Historial")
         self.btn_historial.clicked.connect(self.abrir_historial)
+        
+        self.btn_reportes = QPushButton("Generar Reportes")  # Nuevo botón
+        self.btn_reportes.clicked.connect(self.abrir_reportes)
 
         self.layout.addWidget(self.btn_registro)
         self.layout.addWidget(self.btn_historial)
+        self.layout.addWidget(self.btn_reportes)
 
         container = QWidget()
         container.setLayout(self.layout)
@@ -66,3 +71,8 @@ class MainWindow(QMainWindow):
         """Abre la ventana de historial."""
         self.historial = HistorialTransacciones()
         self.historial.show()
+
+    def abrir_reportes(self):
+        """Abre la ventana de generación de reportes."""
+        self.reportes = Reportes()
+        self.reportes.show()
