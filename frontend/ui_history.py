@@ -32,12 +32,21 @@ class HistorialTransacciones(QWidget):
 
     def mostrar_transacciones(self):
         """Carga las transacciones desde la base de datos en la tabla."""
-        transacciones = self.db.obtener_transacciones()
+        transacciones = self.db.obtener_transacciones()  # Devuelve objetos Transaccion
         self.tabla.setRowCount(len(transacciones))
 
         for row, transaccion in enumerate(transacciones):
-            for col, dato in enumerate(transaccion[1:]):  # Excluimos el ID
-                self.tabla.setItem(row, col, QTableWidgetItem(str(dato)))
+            # Acceder directamente a los atributos en lugar de usar índices
+            datos = [
+                transaccion.fecha,
+                transaccion.mes,
+                transaccion.descripcion,
+                transaccion.categoria,
+                str(transaccion.ingresos),  # Convertir valores numéricos a string
+                str(transaccion.gastos)
+            ]
+            for col, dato in enumerate(datos):
+                self.tabla.setItem(row, col, QTableWidgetItem(dato))
 
     def aplicar_filtro(self):
         """Filtra las transacciones por categoría seleccionada."""
