@@ -10,6 +10,7 @@ class RegistroTransaccion(QWidget):
 
         # Campos de entrada
         self.fecha = QDateEdit()
+        self.fecha.setDisplayFormat("dd-MM-yyyy")  # Configurar formato correcto
         self.descripcion = QLineEdit()
         self.categoria = QComboBox()
         self.categoria.addItems(["Sueldo", "Gastos", "Educación", "Vivienda"])
@@ -31,16 +32,21 @@ class RegistroTransaccion(QWidget):
 
     def guardar_transaccion(self):
         """Obtiene los datos de los campos y los guarda en la base de datos."""
-        fecha = self.fecha.text()
+        fecha = self.fecha.date().toString("dd-MM-yyyy")  # Solución al formato de fecha
         mes = fecha.split("-")[1]  # Extraemos el mes
         descripcion = self.descripcion.text()
         categoria = self.categoria.currentText()
         ingreso = float(self.ingreso.text()) if self.ingreso.text() else 0
         gasto = float(self.gasto.text()) if self.gasto.text() else 0
 
+        print("Fecha ingresada:", fecha)  # Depuración
+
         if not descripcion or not categoria or (ingreso == 0 and gasto == 0):
-            QMessageBox.warning(self, "Error", "Debe ingresar al menos un valor")
+            QMessageBox.warning(self, "Error", "Debe ingresar al menos un valor valido.")
             return
 
         # Guardamos en la base de datos
         self.db.agregar_transaccion(fecha, mes, descripcion, categoria, ingreso, gasto)
+        
+        # Cerrar ventana despues de guardar
+        self.close()
