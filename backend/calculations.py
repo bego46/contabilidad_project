@@ -1,5 +1,11 @@
 import pandas as pd
 
+def calcular_ingresos_gastos(transacciones):
+    """ Calcular el total de ingresos y gastos. """
+    ingresos = sum(t.ingresos for t in transacciones)
+    gastos = sum(t.gastos for t in transacciones)
+    return ingresos, gastos # Devuelve ambos valores
+
 def calcular_balance(transacciones):
     """Calcula el balance total basado en ingresos y gastos."""
     ingresos = sum(t.ingresos for t in transacciones)
