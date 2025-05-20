@@ -1,5 +1,6 @@
 from PyQt6.QtWidgets import QWidget, QVBoxLayout, QTableWidget, QTableWidgetItem, QComboBox, QPushButton
 from backend.db_manager import DBManager
+from backend.calculations import formatear_numero
 
 class HistorialTransacciones(QWidget):
     def __init__(self):
@@ -44,8 +45,8 @@ class HistorialTransacciones(QWidget):
                 transaccion.mes,
                 transaccion.descripcion,
                 transaccion.categoria,
-                str(transaccion.ingresos),  # Convertir valores numéricos a string
-                str(transaccion.gastos)
+                formatear_numero(transaccion.ingresos),
+                formatear_numero(transaccion.gastos)
             ]
             for col, dato in enumerate(datos):
                 self.tabla.setItem(row, col, QTableWidgetItem(dato))

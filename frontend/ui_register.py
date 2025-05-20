@@ -1,6 +1,7 @@
 from PyQt6.QtWidgets import QWidget, QVBoxLayout, QLineEdit, QComboBox, QPushButton, QDateEdit, QMessageBox
+from PyQt6.QtCore import Qt
 from backend.db_manager import DBManager  # Importamos el módulo backend
-from backend.calculations import calcular_ingresos_gastos
+from backend.calculations import calcular_ingresos_gastos, formatear_numero
 
 class RegistroTransaccion(QWidget):
     def __init__(self, main_window):
@@ -16,8 +17,16 @@ class RegistroTransaccion(QWidget):
         self.descripcion = QLineEdit()
         self.categoria = QComboBox()
         self.categoria.addItems(["Sueldo", "Gastos", "Educación", "Vivienda"])
+        
         self.ingreso = QLineEdit()
+        self.ingreso.setPlaceholderText("0.00")
+        self.ingreso.setAlignment(Qt.AlignmentFlag.AlignRight)
+        self.ingreso.textChanged.connect(self.formatear_ingreso)
+        
         self.gasto = QLineEdit()
+        self.gasto.setPlaceholderText("0.00")
+        self.gasto.setAlignment(Qt.AlignmentFlag.AlignRight)
+        self.gasto.textChanged.connect(self.formatear_gasto)
 
         # Botón para guardar en la base de datos
         self.btn_guardar = QPushButton("Guardar Transacción")
@@ -54,3 +63,19 @@ class RegistroTransaccion(QWidget):
         
         # Cerrar ventana despues de guardar
         # self.close()
+        
+    def formatear_ingreso(self):
+        """Aplica formato mientras el usuario escribe, sin mover el cursor."""
+        texto = self.ingreso.text().replace(",", "")
+        if texto and texto.replace(".", "").isdigit():
+            cursor_pos = self.ingreso.cursorPosition()  # 🔹 Guardamos la posición actual del cursor
+            self.ingreso.setText(formatear_numero(float(texto)))
+            self.ingreso.setCursorPosition(cursor_pos)  # 🔹 Restauramos la posición del cursor
+
+    def formatear_gasto(self):
+        """Aplica formato mientras el usuario escribe, sin mover el cursor."""
+        texto = self.gasto.text().replace(",", "")
+        if texto and texto.replace(".", "").isdigit():
+            cursor_pos = self.gasto.cursorPosition()
+            self.gasto.setText(formatear_numero(float(texto)))
+            self.gasto.setCursorPosition(cursor_pos)
