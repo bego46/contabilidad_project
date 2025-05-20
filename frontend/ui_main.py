@@ -6,7 +6,8 @@ from backend.db_manager import DBManager
 from frontend.ui_register import RegistroTransaccion
 from frontend.ui_history import HistorialTransacciones
 from frontend.ui_reports import Reportes
-from backend.calculations import calcular_balance
+from backend.calculations import calcular_balance, calcular_ingresos_gastos
+from backend.report_generator import generar_reporte_pdf, exportar_excel
 
 
 
@@ -22,7 +23,8 @@ class MainWindow(QMainWindow):
         self.balance_label.setFont(QFont("Arial", 16))
 
         # Gráfico de ingresos/gastos
-        self.canvas = FigureCanvas(Figure(figsize=(5, 3)))
+        self.fig = Figure(figsize=(5, 3))
+        self.canvas = FigureCanvas(self.fig)
         self.layout.addWidget(self.balance_label)
         self.layout.addWidget(self.canvas)
 
@@ -52,19 +54,22 @@ class MainWindow(QMainWindow):
         transacciones = self.db.obtener_transacciones()
         balance = calcular_balance(transacciones)
         self.balance_label.setText(f"Balance Total: ${balance:.2f}")
+        
+        # Calcular ingresos y gastos para el gráfico
+        ingresos, gastos = calcular_ingresos_gastos(transacciones)
+        self.actualizar_grafico(ingresos, gastos)
 
     def actualizar_grafico(self, ingresos, gastos):
         """Actualiza el gráfico con datos financieros."""
-        fig = self.canvas.figure
-        fig.clear()
-        ax = fig.add_subplot(111)
+        self.fig.clear()
+        ax = self.fig.add_subplot(111)
         ax.bar(["Ingresos", "Gastos"], [ingresos, gastos], color=["green", "red"])
         ax.set_title("Comparación de ingresos y gastos")
         self.canvas.draw()
 
     def abrir_registro(self):
         """Abre la ventana de registro."""
-        self.registro = RegistroTransaccion()
+        self.registro = RegistroTransaccion(self)
         self.registro.show()
 
     def abrir_historial(self):
