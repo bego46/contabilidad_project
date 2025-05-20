@@ -1,9 +1,11 @@
 from PyQt6.QtWidgets import QWidget, QVBoxLayout, QLineEdit, QComboBox, QPushButton, QDateEdit, QMessageBox
 from backend.db_manager import DBManager  # Importamos el módulo backend
+from backend.calculations import calcular_ingresos_gastos
 
 class RegistroTransaccion(QWidget):
-    def __init__(self):
+    def __init__(self, main_window):
         super().__init__()
+        self.main_window = main_window
         self.setWindowTitle("Registrar Transacción")
         self.layout = QVBoxLayout()
         self.db = DBManager()  # Instancia del gestor de base de datos
@@ -38,9 +40,8 @@ class RegistroTransaccion(QWidget):
         categoria = self.categoria.currentText()
         ingreso = float(self.ingreso.text()) if self.ingreso.text() else 0
         gasto = float(self.gasto.text()) if self.gasto.text() else 0
-
-        print("Fecha ingresada:", fecha)  # Depuración
-
+        
+        # Si no hay ingreso ni gasto, mostramos un mensaje de error
         if not descripcion or not categoria or (ingreso == 0 and gasto == 0):
             QMessageBox.warning(self, "Error", "Debe ingresar al menos un valor valido.")
             return
@@ -48,5 +49,8 @@ class RegistroTransaccion(QWidget):
         # Guardamos en la base de datos
         self.db.agregar_transaccion(fecha, mes, descripcion, categoria, ingreso, gasto)
         
+        # Actualizamos el grafico
+        self.main_window.actualizar_balance()
+        
         # Cerrar ventana despues de guardar
-        self.close()
+        # self.close()
