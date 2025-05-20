@@ -1,4 +1,4 @@
-from PyQt6.QtWidgets import QWidget, QVBoxLayout, QPushButton
+from PyQt6.QtWidgets import QWidget, QVBoxLayout, QPushButton, QFileDialog
 from backend.db_manager import DBManager
 from backend.report_generator import generar_reporte_pdf, exportar_excel
 
@@ -24,11 +24,17 @@ class Reportes(QWidget):
         self.setLayout(self.layout)
 
     def exportar_pdf(self):
-        """Exporta los datos a PDF."""
-        transacciones = self.db.obtener_transacciones()
-        generar_reporte_pdf(transacciones, filename="Reporte_Financiero.pdf")
+        """Abre una ventana para elegir donde guardar el PDF."""
+        # opciones = QFileDialog.options()
+        ruta_archivo, _ = QFileDialog.getSaveFileName(self, "Guardar reporte PDF", "", "PDF Files (*.pdf)")
+        if ruta_archivo: # Si el usuario elige una ruta valida
+            transacciones = self.db.obtener_transacciones()
+            generar_reporte_pdf(transacciones, filename=ruta_archivo)
 
     def exportar_excel(self):
         """Exporta los datos a Excel."""
-        transacciones = self.db.obtener_transacciones()
-        exportar_excel(transacciones, filename="Reporte_Financiero.xlsx")
+        # opciones = QFileDialog.Options()
+        ruta_archivo, _ = QFileDialog.getSaveFileName(self, "Guardar reporte Excel", "", "Excel Files (*.xlsx)")
+        if ruta_archivo:
+            transacciones = self.db.obtener_transacciones()
+            exportar_excel(transacciones, filename=ruta_archivo)
