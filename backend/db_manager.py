@@ -33,9 +33,20 @@ class DBManager:
 
     def obtener_transacciones(self):
         """Consulta y convierte las transacciones en objetos Python."""
-        self.cursor.execute("SELECT * FROM transacciones")
-        filas = self.cursor.fetchall()
-        return [Transaccion(*fila) for fila in filas]  # Usa la clase modelo
+        try:
+            cursor = self.conn.cursor()
+            cursor.execute("SELECT * FROM transacciones")
+            datos = cursor.fetchall()  # Obtener los datos correctamente
+
+            # print("Datos obtenidos desde la BD:", datos)  # Depuración
+
+            if not datos:
+                return []
+
+            return [Transaccion(*fila) for fila in datos ]
+        except Exception as e:
+            print("Error al obtener transacciones:", e)
+            return []  # Asegurar que se retorne una lista vacía en caso de error
 
 
     def cerrar_conexion(self):

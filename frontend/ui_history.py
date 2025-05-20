@@ -19,7 +19,7 @@ class HistorialTransacciones(QWidget):
         self.filtro_categoria.currentIndexChanged.connect(self.aplicar_filtro)
 
         self.btn_actualizar = QPushButton("Actualizar")
-        self.btn_actualizar.clicked.connect(self.mostrar_transacciones)
+        self.btn_actualizar.clicked.connect(lambda: self.mostrar_transacciones(self.db.obtener_transacciones()))
 
         # Agregar elementos a la interfaz
         self.layout.addWidget(self.filtro_categoria)
@@ -30,9 +30,11 @@ class HistorialTransacciones(QWidget):
         # Mostrar datos al iniciar
         self.mostrar_transacciones()
 
-    def mostrar_transacciones(self):
+    def mostrar_transacciones(self, transacciones=None):
         """Carga las transacciones desde la base de datos en la tabla."""
-        transacciones = self.db.obtener_transacciones()  # Devuelve objetos Transaccion
+        if transacciones is None:
+            transacciones = self.db.obtener_transacciones()  # Devuelve objetos Transaccion
+        
         self.tabla.setRowCount(len(transacciones))
 
         for row, transaccion in enumerate(transacciones):
@@ -53,10 +55,9 @@ class HistorialTransacciones(QWidget):
         categoria_seleccionada = self.filtro_categoria.currentText()
         transacciones = self.db.obtener_transacciones()
 
-        if categoria_seleccionada != "Todas":
-            transacciones = [t for t in transacciones if t[4] == categoria_seleccionada]
-
-        self.tabla.setRowCount(len(transacciones))
-        for row, transaccion in enumerate(transacciones):
-            for col, dato in enumerate(transaccion[1:]):
-                self.tabla.setItem(row, col, QTableWidgetItem(str(dato)))
+        if categoria_seleccionada == "Todas":
+            transacciones_filtradas = transacciones
+        else:
+            transacciones_filtradas = [t for t in transacciones if t.categoria == categoria_seleccionada]
+        
+        self.mostrar_transacciones(transacciones_filtradas)
